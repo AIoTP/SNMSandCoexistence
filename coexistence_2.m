@@ -1,7 +1,5 @@
-function boxes = facecoexistence(boxes,overlap,prob_thresh)
+function boxes = coexistence_2(boxes,overlap,prob_thresh)
 
-scores_thresh=-log(1/prob_thresh-1);
-score_overlap=-log(1/overlap-1);
 %%%%%%%%%%%%%%%%%%%%%%%%%先对boxes按分（置信度）从大到小排序
 s = boxes(:,end);
 
