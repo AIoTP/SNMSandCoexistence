@@ -1,7 +1,5 @@
 function visualize2_detection(bbox,thr)
 
-
-%colors = parula(100);
 color=[1 0 0];
 scores = vl_nnsigmoid(bbox(:,end));
 
@@ -17,14 +15,8 @@ for i = 1:size(bbox, 1)
     lw = max(2, min(3, min([bh/20, bw/20])));
   end
   lw = lw * scores(i); 
-  % if 100*scores(i) < 75 
-  %   lw = lw / 2;
-  % end
   rectangle('position', [bbox(i,1:2) bbox(i,3:4)-bbox(i,1:2)+1], ...
             'EdgeColor', color, 'LineWidth', lw,'Curvature',[1,1]);
 end
 hold on;
-%colormap parula;
-%colormap(colors);
-%colorbar;
 axis off;
