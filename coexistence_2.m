@@ -1,37 +1,13 @@
 function boxes = facecoexistence(boxes,overlap,prob_thresh)
 
 scores_thresh=-log(1/prob_thresh-1);
-jiaochaa=0.5;
-jiaocha=-log(1/jiaochaa-1);
 score_overlap=-log(1/overlap-1);
-
-%if ~exist('use_gpu', 'var')
-%    use_gpu = false;
-%end
-
-%if use_gpu
-%   s = boxes(:, end);
-%    if ~issorted(s(end:-1:1))
-%       [~, I] = sort(s, 'descend');
-%        boxes = boxes(I, :);
-%        pick = nms_gpu_mex(single(boxes)', double(overlap));
-%       pick = I(pick);
-%    else
-%       pick = nms_gpu_mex(single(boxes)', double(overlap));
-%    end
- %   return;
-%end
-    
-%if size(boxes, 1) < 1000000
-%    pick = soft-nms_mex(double(boxes), double(overlap));
-%    return;
-%end
-%%%%%%%%%%%%%%%%%%%%%%%%%ÏÈ¶Ôboxes°´·Ö£¨ÖÃĞÅ¶È£©´Ó´óµ½Ğ¡ÅÅĞò
+%%%%%%%%%%%%%%%%%%%%%%%%%å…ˆå¯¹boxesæŒ‰åˆ†ï¼ˆç½®ä¿¡åº¦ï¼‰ä»å¤§åˆ°å°æ’åº
 s = boxes(:,end);
 
 [~, I] = sort(s,'descend');
 boxes=boxes(I,:);
-%´Ó·Ö´óµ½Ğ¡±éÀú¿òboxes£¨i,:£©
+%ä»åˆ†å¤§åˆ°å°éå†æ¡†boxesï¼ˆi,:ï¼‰
 ll=length(I);
 i=1;
 while i<ll 
@@ -45,7 +21,7 @@ while i<ll
  
  areai = (x2-x1+1) .* (y2-y1+1);
  j=i+1;
-%±éÀúboxes£¨i,:£©ºóÃæËùÓĞ¿ò£¬ÕÒµ½ÖØºÏÃæ»ı´óÓÚoverlap×ö´¦Àí
+%éå†boxesï¼ˆi,:ï¼‰åé¢æ‰€æœ‰æ¡†ï¼Œæ‰¾åˆ°é‡åˆé¢ç§¯å¤§äºoverlapåšå¤„ç†
  while j<=ll
    jx1 = boxes(j,1);
    jy1 = boxes(j,2);
@@ -59,26 +35,26 @@ while i<ll
   
   w = max(0.0, xx2-xx1+1);
   h = max(0.0, yy2-yy1+1);
-  %ÇóµÃÖØºÏµÄÃæ»ı±ÈÀı
+  %æ±‚å¾—é‡åˆçš„é¢ç§¯æ¯”ä¾‹
   inter = w.*h;
   o = inter ./ (areai + areaj - inter);
-%Èç¹ûÓĞÖØµş£¬boxes(I(j),[1:4 end])·ÖÌØ±ğµÍ£¬ÄÇÃ´ÎÒÃÇÀ´¿´ÖØºÏÃæ»ıÓëintertÓë×ÔÉíareai,areajµÄ±ÈÖµ
-%Èô´óÓÚoverlap,Áô´ıºóĞøÉ¾³ı£¬ÀàËÆoverlapÈ¡0µÄnms
-%Õâ½â¾öÁË´óĞ¡¿ò¹²´æ£¬µ«ÊÇ´óĞ¡Á³²»¹²´æ£¬¶øÒ»°ãµÄnmsÈ¥²»µôĞé¾°µÄÎÊÌâ£¬ÇÒ¼ÓÉÏÉ¾È¥µÄ¿ò±ØĞë·ÖĞ¡£¬¶Ô±È¿ò±ØĞë·Ö´óµÄÌõ¼ş£¬±ÜÃâÎóÉ¾¡£
+%å¦‚æœæœ‰é‡å ï¼Œboxes(I(j),[1:4 end])åˆ†ç‰¹åˆ«ä½ï¼Œé‚£ä¹ˆæˆ‘ä»¬æ¥çœ‹é‡åˆé¢ç§¯ä¸intertä¸è‡ªèº«areai,areajçš„æ¯”å€¼
+%è‹¥å¤§äºoverlap,ç•™å¾…åç»­åˆ é™¤ï¼Œç±»ä¼¼overlapå–0çš„nms
+%è¿™è§£å†³äº†å¤§å°æ¡†å…±å­˜ï¼Œä½†æ˜¯å¤§å°è„¸ä¸å…±å­˜ï¼Œè€Œä¸€èˆ¬çš„nmså»ä¸æ‰è™šæ™¯çš„é—®é¢˜ï¼Œä¸”åŠ ä¸Šåˆ å»çš„æ¡†å¿…é¡»åˆ†å°ï¼Œå¯¹æ¯”æ¡†å¿…é¡»åˆ†å¤§çš„æ¡ä»¶ï¼Œé¿å…è¯¯åˆ ã€‚
    if (boxes(j,end)<0)&&(o>0)
       %areabei=areai/areaj;
       interi=inter/areai;
       interj=inter/areaj;
       %if (interi>overlap)||( interj>overlap)
-      if (interj>0.9)&&(boxes(i,end)>5)
+      if (interj>0.3)&&(boxes(i,end)>5)
       boxes(j,:)=[];
       ll=ll-1;
       end
   end
     j=j+1;   
  end
-%boxes(i,:)¿òºóËùÓĞµÄboxes(j,:)¿òÅĞ¶ÏÖØºÏÃæ»ı¼°¶ÔÓ¦µÄ´¦ÀíÍê±Ï
-%´¦ÀíÏÂÒ»¸öboxes(i,:)¿ò
+%boxes(i,:)æ¡†åæ‰€æœ‰çš„boxes(j,:)æ¡†åˆ¤æ–­é‡åˆé¢ç§¯åŠå¯¹åº”çš„å¤„ç†å®Œæ¯•
+%å¤„ç†ä¸‹ä¸€ä¸ªboxes(i,:)æ¡†
 i=i+1;
 
 end
