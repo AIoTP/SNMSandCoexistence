@@ -1,20 +1,4 @@
-%  FILE:   tiny_face_detector.m
-%
-%    This script serves as a minimal demo for our face detector. Note that
-%    running this file does not reproduce the same numbers as reported in our
-%    paper, due to different parameter setting. 
-% 
-%    In this demo, we set the parameters in a way that the visualization looks
-%    clean, but this results in a relatively poor recall. However, to achieve a
-%    nice recall, we have to lower the threshold of detection confidence and
-%    increase the overlap threshold of NMS. 
-% 
-%    In our WIDER FACE experiments, we set confidence threshold to 0.03 and NMS
-%    threshold to 0.3. Additionally, we test with a fixed set of scales. For
-%    more details, please refer to our experiment script (scripts/hr_res101.m)
-%    and the main test function (cnn_widerface_test_AB.m).
-% 
-%    Feel free to modify the code to suit your needs (such as batch processing). 
+
 
 function  crowdsdetector(prob_thresh, nms_thresh, gpu_id)
 
